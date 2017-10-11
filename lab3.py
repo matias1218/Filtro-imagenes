@@ -3,7 +3,6 @@
 """
 Created on Wed Oct  4 18:27:09 2017
 
-@author: matias
 """
 
 from PIL import Image
@@ -12,12 +11,14 @@ import matplotlib.pyplot as plt
 from scipy.misc import imsave
 from scipy import fftpack
 
+# se importa la imagen a estudiar
 img = Image.open('leena512.bmp')
     
-
+# se aplica la transformada de fourier a la imagen para extraer su espectro
+# de frecuencias
 f = np.fft.fft2(img)
 fshift = np.fft.fftshift(f)
-magnitude_spectrum = 20*np.log(np.abs(fshift))  
+magnitude_spectrum = 20*np.log(np.abs(fshift))  # centrado de frecuencias en torno a cero
 plt.subplot(121),plt.imshow(img, cmap = 'gray')
 plt.title('Imagen original'), plt.xticks([]), plt.yticks([])
 plt.subplot(122),plt.imshow(magnitude_spectrum, cmap = 'gray')
@@ -29,19 +30,18 @@ plt.show()
 imagen = np.asarray(img,dtype=np.float32)
 
 
-#archivo = open('texto.txt', 'w')
-
+# componentes auxiliares 
 matriz = []
-
 nuevaImagen1 = []
 nuevaImagen2 = []
 listaAux1 = []
 listaAux2 = []
 
-
+# kernels que se aplicarán a las imagenes en el filtrado
 kernelGauss = [[1,4,6,4,1],[4,16,24,16,4],[6,24,36,24,6],[4,16,24,16,4],[1,4,6,4,1]]
 kernelBordes = [[1,2,0,-2,-1],[1,2,0,-2,-1],[1,2,0,-2,-1],[1,2,0,-2,-1],[1,2,0,-2,-1]]
 
+# los arreglos de los kernels se transforman a arreglos de numpy
 ListaGNumpyAux = np.array(kernelGauss)
 ListaBNumpyAux = np.array(kernelBordes)
 
@@ -59,6 +59,8 @@ for k in range(0,len(imagen)):
                 valor = valor + imagen[k-i][l-j]*Gaussiano[i][j]
         listaAux1.append(valor)     
     nuevaImagen1.append(listaAux1)        
+
+# Normaliazcion de imagen filtrada 
         
 imagenSuavizada = np.asarray(nuevaImagen1,dtype=np.float32)
 maximo = imagenSuavizada.max()
@@ -86,7 +88,9 @@ for k in range(0,len(imagen)):
             for j in range(0,len(bordes)):         
                 valor = valor + imagen[k-i][l-j]*bordes[i][j]
         listaAux2.append(valor)     
-    nuevaImagen2.append(listaAux2)        
+    nuevaImagen2.append(listaAux2)    
+
+# Normaliazcion de imagen filtrada    
         
 imagenBordes = np.asarray(nuevaImagen2,dtype=np.float32)
 maximo = imagenBordes.max()
