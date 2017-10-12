@@ -93,7 +93,7 @@ for fila in imagenAux:
            
 
 plt.subplot(121),plt.imshow(imagenAmpliada, cmap = 'gray')
-plt.title('Imagen con filtrado Gausiano con bordes arreglados'), plt.xticks([]), plt.yticks([])
+plt.title('Imagen original con pixeles añadidos'), plt.xticks([]), plt.yticks([])
 plt.show()
 
 ##############################################################################
