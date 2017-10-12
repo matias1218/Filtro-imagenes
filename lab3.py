@@ -29,7 +29,6 @@ plt.show()
 # se guarda la imagen en un arreglo bidimensional
 imagen = np.asarray(img,dtype=np.float32)
 
-
 # componentes auxiliares 
 matriz = []
 nuevaImagen1 = []
@@ -47,8 +46,61 @@ ListaBNumpyAux = np.array(kernelBordes)
 
 Gaussiano = ListaGNumpyAux
 bordes = ListaBNumpyAux
+################################################################3333
+
+# Se proceden a agregarse ceros en los extremos para evitar la perdida de pixeles
+
+imagenAmpliada = []
+# insercion de filas a la matriz (abajo)
+
+for elemento in imagen:
+    imagenAmpliada.append(elemento)
+
+for elementos in kernelGauss:
+    listaAuxiliar = []
+    for k in range(0,512):
+        listaAuxiliar = np.append(listaAuxiliar, 0.0)
+    
+    imagenAmpliada.append(listaAuxiliar)
+    
+
+# se voltea la imagen para agregar filas en el borde superior
+reversed_arr = imagenAmpliada[::-1]
+
+# insercion de filas a la matriz (arriba)
+for elementos in kernelGauss:
+    lista = []
+    for k in range(0,512):
+        lista = np.append(lista, 0.0)
+    reversed_arr.append(lista)
+        
+imagenAux = reversed_arr[::-1]
+
+i = 0
+imagenAmpliada = []
+# insercion de columnas
+for fila in imagenAux:
+    for element in kernelGauss:
+        fila = np.append(fila, 0.0)
+        
+    
+    filaAux = fila[::-1]
+    for element in kernelGauss:
+        filaAux = np.append(filaAux, 0.0)
+
+    filaNueva = filaAux[::-1]
+    imagenAmpliada.append(filaNueva)
+           
+
+plt.subplot(121),plt.imshow(imagenAmpliada, cmap = 'gray')
+plt.title('Imagen con filtrado Gausiano con bordes arreglados'), plt.xticks([]), plt.yticks([])
+plt.show()
+
+##############################################################################
 
 # aplicacion del filtro gaussiano
+
+imagen = np.asarray(imagenAmpliada,dtype=np.float32)
 
 for k in range(0,len(imagen)):
     listaAux1 = []
@@ -71,7 +123,7 @@ f = np.fft.fft2(imagenNormalizada1)
 fshift = np.fft.fftshift(f)
 magnitude_spectrum = 20*np.log(np.abs(fshift))  
 
-plt.subplot(121),plt.imshow(img, cmap = 'gray')
+plt.subplot(121),plt.imshow(imagenNormalizada1, cmap = 'gray')
 plt.title('Imagen con filtrado Gausiano'), plt.xticks([]), plt.yticks([])
 plt.subplot(122),plt.imshow(magnitude_spectrum, cmap = 'gray')
 plt.title('Espectro de frecuencias'), plt.xticks([]), plt.yticks([])
@@ -102,7 +154,7 @@ f = np.fft.fft2(imagenNormalizada2)
 fshift = np.fft.fftshift(f)
 magnitude_spectrum = 20*np.log(np.abs(fshift))  
 
-plt.subplot(121),plt.imshow(img, cmap = 'gray')
+plt.subplot(121),plt.imshow(imagenNormalizada2, cmap = 'gray')
 plt.title('Imagen con filtrado de bordes'), plt.xticks([]), plt.yticks([])
 plt.subplot(122),plt.imshow(magnitude_spectrum, cmap = 'gray')
 plt.title('Espectro de frecuencias'), plt.xticks([]), plt.yticks([])
